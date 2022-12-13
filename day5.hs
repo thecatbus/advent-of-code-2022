@@ -27,14 +27,10 @@ performWith canPickMultiple wrappedStack (many, fromKey, toKey) =
     stack <- wrappedStack
     fromStack <- Map.lookup fromKey stack
     toStack <- Map.lookup toKey stack
-    let moveThese = take many fromStack
+    let movedBlock = (if canPickMultiple then id else reverse) $ take many fromStack
     return
       ( Map.insert fromKey (drop many fromStack)
-          . Map.insert
-            toKey
-            ( (if canPickMultiple then id else reverse) moveThese
-                ++ toStack
-            )
+          . Map.insert toKey (movedBlock ++ toStack)
           $ stack
       )
 
