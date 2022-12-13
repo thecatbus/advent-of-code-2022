@@ -56,7 +56,7 @@ parse = bimap parseStack (map parseMove) . sliceOn "" . lines
         . words
 
 part1 :: String -> Maybe String
-part1 = topRow <=< uncurry (foldl $ performWith False) . parse
+part1 = topRow <=< uncurry (foldl $ performWith M9000) . parse
 
 part2 :: String -> Maybe String
-part2 = topRow <=< uncurry (foldl $ performWith True) . parse
+part2 = topRow <=< uncurry (foldl $ performWith M9001) . parse
