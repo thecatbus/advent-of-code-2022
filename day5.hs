@@ -14,6 +14,8 @@ main = do
   print $ part2 input
   hClose fileContents
 
+data Machine = M9000 | M9001 deriving (Eq)
+
 type Stack = Map.Map Int [Char]
 
 type Move = (Int, Int, Int)
@@ -21,13 +23,15 @@ type Move = (Int, Int, Int)
 topRow :: Stack -> Maybe String
 topRow stack = mapM (fmap head . flip Map.lookup stack) [1 .. Map.size stack]
 
-performWith :: Bool -> Maybe Stack -> Move -> Maybe Stack
-performWith canPickMultiple wrappedStack (many, fromKey, toKey) =
+performWith :: Machine -> Maybe Stack -> Move -> Maybe Stack
+performWith machine maybeStack (many, fromKey, toKey) =
   do
-    stack <- wrappedStack
+    stack <- maybeStack
     fromStack <- Map.lookup fromKey stack
     toStack <- Map.lookup toKey stack
-    let movedBlock = (if canPickMultiple then id else reverse) $ take many fromStack
+    let movedBlock =
+          (if machine == M9001 then id else reverse) $
+            take many fromStack
     return
       ( Map.insert fromKey (drop many fromStack)
           . Map.insert toKey (movedBlock ++ toStack)
